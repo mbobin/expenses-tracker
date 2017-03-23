@@ -1,1 +1,4 @@
 /spec/examples.txt
+/db/development.db
+/db/test.db
+/db/production.db

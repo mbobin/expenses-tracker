@@ -5,8 +5,9 @@ module ExpenseTracker
 
   class Ledger
     def record(expense)
-      unless expense.key?("payee")
-        message = "Invalid expense: `payee` is required"
+      unless valid?(expense)
+        message = "Invalid expense: #{@errors.join(', ')} "
+
         return RecordResult.new(false, nil, message)
       end
 
@@ -17,6 +18,22 @@ module ExpenseTracker
 
     def expenses_on(date)
       DB[:expenses].where(date: date).all
+    end
+
+    private
+
+    def self.fields
+      @fields ||= %w| payee amount date |.freeze
+    end
+
+    def fields
+      self.class.fields
+    end
+
+    def valid?(expense)
+      @errors ||= fields.reject { |field| expense.key?(field) }
+        .map { |field| "`#{field}` is required" }
+      @errors.empty?
     end
   end
 end

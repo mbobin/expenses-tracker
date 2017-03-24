@@ -18,6 +18,11 @@ module ExpenseTracker
       expense.merge("id" => parsed_response["expense_id"])
     end
 
+    before do
+      header "Accept", "application/json"
+      header "Content-Type", "application/json"
+    end
+
     it "records submitted expenses" do
       coffee = post_expense(
         "payee" => "Starbucks",
